@@ -7,15 +7,17 @@ A zero-dependency, ultra-lightweight proxy that intercepts Claude Code's Anthrop
 ## 🏗️ Architecture
 
 ```mermaid
-flowchart LR
-    claude["Claude Code<br/>(CLI tool)"]
-    proxy["Local Middleware Proxy<br/>(Node.js native)<br/><br/>Transforms requests<br/>&amp; translates SSE chunks"]
-    nim["NVIDIA NIM API<br/>(integrate.api.nvidia.com)"]
+graph LR
+    claude["Claude Code (CLI tool)"]
+    proxy["Local Middleware Proxy (Node.js native)"]
+    nim["NVIDIA NIM API (OpenAI-compatible)"]
+    models["Configured NIM models<br/>Default: nemotron-3-ultra-550b-a55b<br/>Sonnet: nemotron-3.5-super-vl-120b-a12b<br/>Haiku / Opus: nemotron-3-ultra-550b-a55b"]
 
-    claude -->|"Anthropic Protocol<br/>POST /v1/messages"| proxy
-    proxy -->|"OpenAI Protocol<br/>POST /chat/completions"| nim
-    nim -->|"OpenAI SSE chunks"| proxy
-    proxy -->|"Anthropic SSE"| claude
+    claude -->|"Anthropic API: POST /v1/messages"| proxy
+    proxy -->|"OpenAI API: POST /chat/completions"| nim
+    nim -->|"OpenAI SSE response"| proxy
+    proxy -->|"Anthropic SSE response"| claude
+    nim --- models
 ```
 
 ### What this Middleware Handles:
@@ -41,8 +43,11 @@ Open `.env` in this directory:
 # Set your NVIDIA API key
 NVIDIA_API_KEY=nvapi-your-key-here
 
-# Choose the model to use (default: Meta Llama 3.3 70B)
-DEFAULT_MODEL=meta/llama-3.3-70b-instruct
+# Default model and Claude model mappings
+DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b
+MODEL_SONNET=nvidia/nemotron-3.5-super-vl-120b-a12b
+MODEL_HAIKU=nvidia/nemotron-3-ultra-550b-a55b
+MODEL_OPUS=nvidia/nemotron-3-ultra-550b-a55b
 ```
 
 ### 3. Start the Middleware
