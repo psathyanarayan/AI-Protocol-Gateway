@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-nvidia-middleware",
+  "version": "1.0.0",
+  "description": "Zero-dependency Anthropic to NVIDIA NIM OpenAI protocol adapter for Claude Code",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "test": "node test/transformers.test.js && node test/streaming.test.js"
+  },
+  "keywords": ["claude-code", "nvidia-nim", "anthropic", "proxy"],
+  "author": "",
+  "license": "MIT"
+}
